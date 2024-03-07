@@ -1,0 +1,14 @@
+server:
+  port: ${SERVER_PORT:8081}
+spring:
+  application:
+    name: Lab5
+  datasource:
+    main:
+      db-name: ${PGSQL_SCHEMA}
+      driver-class-name: org.postgresql.Driver
+      url: jdbc:postgresql://${PGSQL_HOST}:${PGSQL_PORT}/${PGSQL_DATABASE}?currentSchema=${PGSQL_SCHEMA}
+      username: ${PGSQL_USERNAME}
+      password: ${PGSQL_PASSWORD}
+
+api-url: /app/v1
