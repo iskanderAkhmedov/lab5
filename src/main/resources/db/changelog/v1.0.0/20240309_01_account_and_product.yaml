@@ -1,0 +1,530 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20240309_01_tpp_ref_account_type
+      author: admin
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: tpp_ref_account_type
+      changes:
+        - tagDatabase:
+            tag: v1.0.0
+        - createTable:
+            tableName: tpp_ref_account_type
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_tpp_ref_account_type
+                  name: internal_id
+                  type: BIGINT
+              - column:
+                  name: value
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+                    unique: true
+
+  - changeSet:
+      id: 20240309_01_tpp_ref_product_class
+      author: admin
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: tpp_ref_product_class
+      changes:
+        - tagDatabase:
+            tag: v1.0.0
+        - createTable:
+            tableName: tpp_ref_product_class
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_tpp_ref_product_class
+                  name: internal_id
+                  type: BIGINT
+              - column:
+                  name: value
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: gbi_code
+                  type: VARCHAR(50)
+              - column:
+                  name: gbi_name
+                  type: VARCHAR(100)
+              - column:
+                  name: product_row_code
+                  type: VARCHAR(50)
+              - column:
+                  name: product_row_name
+                  type: VARCHAR(100)
+              - column:
+                  name: subclass_code
+                  type: VARCHAR(50)
+              - column:
+                  name: subclass_name
+                  type: VARCHAR(100)
+
+  - changeSet:
+      id: 20240309_01_tpp_ref_product_register_type
+      author: admin
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: tpp_ref_product_register_type
+      changes:
+        - tagDatabase:
+            tag: v1.0.0
+        - createTable:
+            tableName: tpp_ref_product_register_type
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_tpp_ref_product_register_type
+                  name: internal_id
+                  type: BIGINT
+              - column:
+                  name: value
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: register_type_name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: product_class_code
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: register_type_start_date
+                  type: TIMESTAMP
+              - column:
+                  name: register_type_end_date
+                  type: TIMESTAMP
+              - column:
+                  name: account_type
+                  type: VARCHAR(50)
+
+  - changeSet:
+      id: 20240309_01_fk_tpp_ref_product_register_type_on_tpp_ref_product_class
+      author: admin
+      changes:
+        - tagDatabase:
+            tag: v1.0.0.0
+        - addForeignKeyConstraint:
+            baseColumnNames: product_class_code
+            baseTableName: tpp_ref_product_register_type
+            constraintName: fk_tpp_ref_product_register_type_on_tpp_ref_product_class
+            referencedColumnNames: value
+            referencedTableName: tpp_ref_product_class
+        - createIndex:
+            columns:
+              - column:
+                  name: product_class_code
+            indexName: tpp_ref_product_register_type_on_product_class_code_index
+            tableName: tpp_ref_product_register_type
+
+  - changeSet:
+      id: 20240309_01_fk_tpp_ref_product_register_type_on_tpp_ref_account_type
+      author: admin
+      changes:
+        - tagDatabase:
+            tag: v1.0.0.0
+        - addForeignKeyConstraint:
+            baseColumnNames: account_type
+            baseTableName: tpp_ref_product_register_type
+            constraintName: fk_tpp_ref_product_register_type_on_tpp_ref_account_type
+            referencedColumnNames: value
+            referencedTableName: tpp_ref_account_type
+        - createIndex:
+            columns:
+              - column:
+                  name: account_type
+            indexName: tpp_ref_product_register_type_on_account_type_index
+            tableName: tpp_ref_product_register_type
+
+  - changeSet:
+      id: 20240309_01_tpp_product_register
+      author: admin
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: tpp_product_register
+      changes:
+        - tagDatabase:
+            tag: v1.0.0
+        - createTable:
+            tableName: tpp_product_register
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_tpp_product_register
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: product_id
+                  type: BIGINT
+              - column:
+                  name: type
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: account
+                  type: BIGINT
+              - column:
+                  name: currency_code
+                  type: VARCHAR(30)
+              - column:
+                  name: state
+                  type: VARCHAR(50)
+              - column:
+                  name: account_number
+                  type: VARCHAR(25)
+
+  - changeSet:
+      id: 20240309_01_fk_tpp_product_register_on_tpp_ref_product_register_type
+      author: admin
+      changes:
+        - tagDatabase:
+            tag: v1.0.0.0
+        - addForeignKeyConstraint:
+            baseColumnNames: type
+            baseTableName: tpp_product_register
+            constraintName: fk_tpp_product_register_on_tpp_ref_product_register_type
+            referencedColumnNames: value
+            referencedTableName: tpp_ref_product_register_type
+        - createIndex:
+            columns:
+              - column:
+                  name: type
+            indexName: tpp_product_register_on_type_index
+            tableName: tpp_product_register
+
+  - changeSet:
+      id: 20240309_01_account_pool
+      author: admin
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: account_pool
+      changes:
+        - tagDatabase:
+            tag: v1.0.0
+        - createTable:
+            tableName: account_pool
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_account_pool
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: branch_code
+                  type: VARCHAR(50)
+              - column:
+                  name: currency_code
+                  type: VARCHAR(30)
+              - column:
+                  name: mdm_code
+                  type: VARCHAR(50)
+              - column:
+                  name: priority_code
+                  type: VARCHAR(30)
+              - column:
+                  name: registry_type_code
+                  type: VARCHAR(50)
+
+  - changeSet:
+      id: 20240309_01_account
+      author: admin
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: account
+      changes:
+        - tagDatabase:
+            tag: v1.0.0
+        - createTable:
+            tableName: account
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_account
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: account_pool_id
+                  type: BIGINT
+              - column:
+                  name: account_number
+                  type: VARCHAR(25)
+              - column:
+                  name: bussy
+                  type: BOOLEAN
+
+  - changeSet:
+      id: 20240309_01_fk_account_on_account_pool
+      author: admin
+      changes:
+        - tagDatabase:
+            tag: v1.0.0.0
+        - addForeignKeyConstraint:
+            baseColumnNames: account_pool_id
+            baseTableName: account
+            constraintName: fk_account_on_account_pool
+            referencedColumnNames: id
+            referencedTableName: account_pool
+        - createIndex:
+            columns:
+              - column:
+                  name: account_pool_id
+            indexName: account_on_account_pool_id_index
+            tableName: account
+
+  - changeSet:
+      id: 20240309_01_tpp_template_register_balance
+      author: admin
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: tpp_template_register_balance
+      changes:
+        - tagDatabase:
+            tag: v1.0.0
+        - createTable:
+            tableName: tpp_template_register_balance
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_tpp_template_register_balance
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: register_id
+                  type: BIGINT
+              - column:
+                  name: amount
+                  type: DECIMAL
+              - column:
+                  name: order
+                  type: VARCHAR(50)
+              - column:
+                  name: last_modify_date
+                  type: TIMESTAMP
+
+  - changeSet:
+      id: 20240309_01_tpp_product
+      author: admin
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: tpp_product
+      changes:
+        - tagDatabase:
+            tag: v1.0.0
+        - createTable:
+            tableName: tpp_product
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_tpp_product
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: product_code_id
+                  type: BIGINT
+              - column:
+                  name: client_id
+                  type: BIGINT
+              - column:
+                  name: type
+                  type: VARCHAR(50)
+              - column:
+                  name: number
+                  type: VARCHAR(50)
+              - column:
+                  name: priority
+                  type: BIGINT
+              - column:
+                  name: date_of_conclusion
+                  type: TIMESTAMP
+              - column:
+                  name: start_date_time
+                  type: TIMESTAMP
+              - column:
+                  name: end_date_time
+                  type: TIMESTAMP
+              - column:
+                  name: days
+                  type: BIGINT
+              - column:
+                  name: penalty_rate
+                  type: DECIMAL
+              - column:
+                  name: nso
+                  type: DECIMAL
+              - column:
+                  name: threshold_amount
+                  type: DECIMAL
+              - column:
+                  name: requisite_type
+                  type: VARCHAR(50)
+              - column:
+                  name: interest_rate_type
+                  type: VARCHAR(50)
+              - column:
+                  name: tax_rate
+                  type: DECIMAL(50)
+              - column:
+                  name: reasone_close
+                  type: DECIMAL(100)
+              - column:
+                  name: state
+                  type: DECIMAL(50)
+
+  - changeSet:
+      id: 20240309_01_agreement
+      author: admin
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: agreement
+      changes:
+        - tagDatabase:
+            tag: v1.0.0
+        - createTable:
+            tableName: agreement
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_agreement
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: product_id
+                  type: BIGINT
+              - column:
+                  name: general_agreement_id
+                  type: VARCHAR(50)
+              - column:
+                  name: supplementary_agreement_id
+                  type: VARCHAR(50)
+              - column:
+                  name: arrangement_type
+                  type: VARCHAR(50)
+              - column:
+                  name: sheduler_job_id
+                  type: BIGINT
+              - column:
+                  name: number
+                  type: VARCHAR(50)
+              - column:
+                  name: opening_date
+                  type: TIMESTAMP
+              - column:
+                  name: closing_date
+                  type: TIMESTAMP
+              - column:
+                  name: cancel_date
+                  type: TIMESTAMP
+              - column:
+                  name: validity_duration
+                  type: BIGINT
+              - column:
+                  name: cancellation_reason
+                  type: VARCHAR(100)
+              - column:
+                  name: status
+                  type: VARCHAR(50)
+              - column:
+                  name: interest_calculation_date
+                  type: TIMESTAMP
+              - column:
+                  name: interest_rate
+                  type: DECIMAL
+              - column:
+                  name: coefficient
+                  type: DECIMAL
+              - column:
+                  name: coefficient_action
+                  type: VARCHAR(50)
+              - column:
+                  name: minimum_interest_rate
+                  type: DECIMAL
+              - column:
+                  name: minimum_interest_rate_coefficient
+                  type: DECIMAL
+              - column:
+                  name: minimum_interest_rate_coefficient_action
+                  type: VARCHAR(50)
+              - column:
+                  name: maximal_interest_rate
+                  type: DECIMAL
+              - column:
+                  name: maximal_interest_rate_coefficient
+                  type: DECIMAL
+              - column:
+                  name: maximal_interest_rate_coefficient_action
+                  type: VARCHAR(50)
+
+  - changeSet:
+      id: 20240309_01_fk_agreement_on_tpp_product
+      author: admin
+      changes:
+        - tagDatabase:
+            tag: v1.0.0.0
+        - addForeignKeyConstraint:
+            baseColumnNames: product_id
+            baseTableName: agreement
+            constraintName: fk_agreement_on_tpp_product
+            referencedColumnNames: id
+            referencedTableName: tpp_product
+        - createIndex:
+            columns:
+              - column:
+                  name: product_id
+            indexName: agreement_on_product_id_index
+            tableName: agreement

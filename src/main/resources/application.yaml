@@ -1,5 +1,7 @@
 server:
   port: ${SERVER_PORT:8081}
+  error:
+    include-stacktrace: always
 spring:
   application:
     name: Lab5
@@ -10,5 +12,8 @@ spring:
       url: jdbc:postgresql://${PGSQL_HOST}:${PGSQL_PORT}/${PGSQL_DATABASE}?currentSchema=${PGSQL_SCHEMA}
       username: ${PGSQL_USERNAME}
       password: ${PGSQL_PASSWORD}
+
+
+db-schema: ${PGSQL_SCHEMA}
 
 api-url: /app/v1
