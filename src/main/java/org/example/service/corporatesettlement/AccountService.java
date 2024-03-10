@@ -3,7 +3,7 @@ package org.example.service.corporatesettlement;
 import lombok.RequiredArgsConstructor;
 import org.example.api.corporatesettlement.CreateAccountRequestDto;
 import org.example.api.corporatesettlement.CreateAccountResponseDto;
-import org.example.enums.AccountState;
+import org.example.enums.CommonState;
 import org.example.exception.EntityAlreadyExistsException;
 import org.example.exception.EntityNotFoundException;
 import org.example.storage.model.corporatesettlement.TppProductRegisterEntity;
@@ -45,21 +45,12 @@ public class AccountService {
                     + req.getRegistryTypeCode() + " уже существует для ЭП с ИД " + req.getInstanceId() + ".");
         }
 
-        var accountPoolEntity = accountPoolRepository.findByBranchCodeAndCurrencyCodeAndMdmCodeAndPriorityCodeAndRegistryTypeCode(
-                        req.getBranchCode(), req.getCurrencyCode(), req.getMdmCode(), req.getPriorityCode(), req.getRegistryTypeCode())
-                .orElseThrow(() -> (new EntityNotFoundException("Не найден подходящий пул счетов")));
-
-        var accountEntity = accountRepository.findFirstByAccountPoolAndBussy(accountPoolEntity, false)
-                .orElseThrow(() -> (new EntityNotFoundException("Не найден свободный счет в пуле")));
-
-        var tppProductRegisterEntity = tppProductRegisterRepository.save(TppProductRegisterEntity.builder()
-                .productId(req.getInstanceId())
-                .type(registerTypeEntity)
-                .account(accountEntity.getId())
-                .accountNumber(accountEntity.getAccountNumber())
-                .currencyCode(req.getCurrencyCode())
-                .state(AccountState.OPEN)
-                .build());
+        var tppProductRegisterEntity = createAccount(req.getInstanceId(),
+                registerTypeEntity,
+                req.getBranchCode(),
+                req.getCurrencyCode(),
+                req.getMdmCode(),
+                req.getPriorityCode());
 
         return CreateAccountResponseDto.builder()
                 .data(CreateAccountResponseDto.AccountData.builder()
@@ -67,5 +58,31 @@ public class AccountService {
                         .build())
                 .build();
 
+    }
+
+    public TppProductRegisterEntity createAccount(
+            Long productId,
+            TppRefProductRegisterTypeEntity type,
+            String branchCode,
+            String currencyCode,
+            String mdmCode,
+            String priorityCode
+    ) {
+
+        var accountPoolEntity = accountPoolRepository.findByBranchCodeAndCurrencyCodeAndMdmCodeAndPriorityCodeAndRegistryTypeCode(
+                        branchCode, currencyCode, mdmCode, priorityCode, type.getValue())
+                .orElseThrow(() -> (new EntityNotFoundException("Не найден подходящий пул счетов")));
+
+        var accountEntity = accountRepository.findFirstByAccountPoolAndBussy(accountPoolEntity, false)
+                .orElseThrow(() -> (new EntityNotFoundException("Не найден свободный счет в пуле")));
+
+        return tppProductRegisterRepository.save(TppProductRegisterEntity.builder()
+                .productId(productId)
+                .type(type)
+                .account(accountEntity.getId())
+                .accountNumber(accountEntity.getAccountNumber())
+                .currencyCode(currencyCode)
+                .state(CommonState.OPEN)
+                .build());
     }
 }

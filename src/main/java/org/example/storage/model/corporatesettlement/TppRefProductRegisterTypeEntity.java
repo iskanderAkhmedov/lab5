@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,11 +34,12 @@ public class TppRefProductRegisterTypeEntity {
     @Column(name = "value", nullable = false, unique = true)
     private String value;
 
-    @Column(name = "register_type_name", nullable = false)
-    private String registerTtypeNname;
+    @Column(name = "register_type_name", length = 100, nullable = false)
+    private String registerTypeName;
 
-    @Column(name = "product_class_code", nullable = false)
-    private String productClassCode;
+    @ManyToOne
+    @JoinColumn(name = "product_class_code", referencedColumnName = "value", nullable = false)
+    private TppRefProductClassEntity productClass;
 
     @Column(name = "register_type_start_date")
     private Timestamp registerTypeStartDate;
@@ -44,6 +47,7 @@ public class TppRefProductRegisterTypeEntity {
     @Column(name = "register_type_end_date")
     private Timestamp registerTypeEndDate;
 
-    @Column(name = "account_type", length = 50)
-    private String accountType;
+    @ManyToOne
+    @JoinColumn(name = "account_type", referencedColumnName = "value")
+    private TppRefAccountTypeEntity accountType;
 }

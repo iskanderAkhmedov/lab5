@@ -1,6 +1,6 @@
 package org.example.enums;
 
-public enum AccountState {
+public enum CommonState {
     OPEN,
     CLOSED,
     RESERVED,

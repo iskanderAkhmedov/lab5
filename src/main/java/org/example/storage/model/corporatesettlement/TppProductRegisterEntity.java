@@ -13,7 +13,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.example.enums.AccountState;
+import org.example.enums.CommonState;
 
 @Entity
 @Getter
@@ -44,7 +44,7 @@ public class TppProductRegisterEntity {
     private String currencyCode;
 
     @Column(name = "state", length = 50)
-    private AccountState state;
+    private CommonState state;
 
     @Column(name = "account_number", length = 25)
     private String accountNumber;

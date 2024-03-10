@@ -413,13 +413,13 @@ databaseChangeLog:
                   type: VARCHAR(50)
               - column:
                   name: tax_rate
-                  type: DECIMAL(50)
+                  type: DECIMAL
               - column:
                   name: reasone_close
-                  type: DECIMAL(100)
+                  type: VARCHAR(100)
               - column:
                   name: state
-                  type: DECIMAL(50)
+                  type: VARCHAR(50)
 
   - changeSet:
       id: 20240309_01_agreement
