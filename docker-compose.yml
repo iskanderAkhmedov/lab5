@@ -1,0 +1,34 @@
+version: '3.8'
+services:
+  app:
+    image: lab5:0.0.1
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    depends_on:
+      - service-db
+    environment:
+      - SERVER_PORT=8081
+      - PGSQL_HOST=service-db
+      - PGSQL_PORT=5432
+      - PGSQL_DATABASE=postgres
+      - PGSQL_SCHEMA=lab5
+      - PGSQL_USERNAME=admin
+      - PGSQL_PASSWORD=admin
+
+  service-db:
+    image: postgres:14.0
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db/init/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+      - db-data:/var/lib/postgresql/data
+
+volumes:
+  db-data:
