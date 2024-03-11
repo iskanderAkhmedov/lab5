@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.example.enums.CoefficientAction;
 import org.example.enums.RateType;
 
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -99,7 +101,6 @@ public class CreateInstanceRequestDto {
     private Long referenceCode;
 
     @Schema(description = "Массив дополнительных признаков для сегмента КИБ(VIP)")
-    //TODO change to meet requirements?
     @Builder.Default
     private List<AdditionalProperty> additionalProperties = new ArrayList<>();
 
@@ -110,7 +111,6 @@ public class CreateInstanceRequestDto {
     @Builder
     @Getter
     public static class AdditionalProperty {
-        //TODO change to meet requirements?
         private String key;
         private String value;
     }
@@ -174,7 +174,7 @@ public class CreateInstanceRequestDto {
         private BigDecimal minimumInterestRate;
 
         @Schema(description = "Коэффициент по минимальной ставке", nullable = true)
-        private String minimumInterestRateCoefficient;
+        private BigDecimal minimumInterestRateCoefficient;
 
         @Schema(description = "Действие коэффициента по минимальной ставке", nullable = true)
         private CoefficientAction minimumInterestRateCoefficientAction;

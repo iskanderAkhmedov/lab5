@@ -31,14 +31,14 @@ public class TppRefProductRegisterTypeEntity {
     )
     private Long id;
 
-    @Column(name = "value", nullable = false, unique = true)
+    @Column(name = "value_code", nullable = false, unique = true)
     private String value;
 
     @Column(name = "register_type_name", length = 100, nullable = false)
     private String registerTypeName;
 
     @ManyToOne
-    @JoinColumn(name = "product_class_code", referencedColumnName = "value", nullable = false)
+    @JoinColumn(name = "product_class_code", referencedColumnName = "value_code", nullable = false)
     private TppRefProductClassEntity productClass;
 
     @Column(name = "register_type_start_date")
@@ -48,6 +48,6 @@ public class TppRefProductRegisterTypeEntity {
     private Timestamp registerTypeEndDate;
 
     @ManyToOne
-    @JoinColumn(name = "account_type", referencedColumnName = "value")
+    @JoinColumn(name = "account_type", referencedColumnName = "value_code")
     private TppRefAccountTypeEntity accountType;
 }

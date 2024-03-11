@@ -1,5 +1,6 @@
 package org.example.controller.advice;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.example.exception.EntityAlreadyExistsException;
 import org.example.exception.EntityNotFoundException;
 import org.example.utils.AnnotationUtils;
@@ -46,6 +47,13 @@ public class RestControllerAdvice extends ResponseEntityExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ex.getMessage());
+    }
+
+    @ExceptionHandler({Exception.class})
+    public ResponseEntity<String> handle(Exception ex) {
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ExceptionUtils.getStackTrace(ex));
     }
 
 }

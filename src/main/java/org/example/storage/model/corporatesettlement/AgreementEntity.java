@@ -46,13 +46,13 @@ public class AgreementEntity {
     private String arrangementType;
 
     @Column(name = "sheduler_job_id")
-    private Long shedulerJobIid;
+    private Long shedulerJobId;
 
     @Column(name = "number", length = 50)
     private String number;
 
     @Column(name = "opening_date")
-    private Timestamp opening_date;
+    private Timestamp openingDate;
 
     @Column(name = "closingDate")
     private Timestamp closingDate;

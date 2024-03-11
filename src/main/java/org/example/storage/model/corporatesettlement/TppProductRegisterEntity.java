@@ -34,7 +34,7 @@ public class TppProductRegisterEntity {
     private Long productId;
 
     @ManyToOne
-    @JoinColumn(name = "type", referencedColumnName = "value", nullable = false)
+    @JoinColumn(name = "type", referencedColumnName = "value_code", nullable = false)
     private TppRefProductRegisterTypeEntity type;
 
     @Column(name = "account")

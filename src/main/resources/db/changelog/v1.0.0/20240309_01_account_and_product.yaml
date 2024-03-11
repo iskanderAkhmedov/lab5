@@ -22,7 +22,7 @@ databaseChangeLog:
                   name: internal_id
                   type: BIGINT
               - column:
-                  name: value
+                  name: value_code
                   type: VARCHAR(100)
                   constraints:
                     nullable: false
@@ -51,7 +51,7 @@ databaseChangeLog:
                   name: internal_id
                   type: BIGINT
               - column:
-                  name: value
+                  name: value_code
                   type: VARCHAR(100)
                   constraints:
                     nullable: false
@@ -98,7 +98,7 @@ databaseChangeLog:
                   name: internal_id
                   type: BIGINT
               - column:
-                  name: value
+                  name: value_code
                   type: VARCHAR(100)
                   constraints:
                     nullable: false
@@ -133,7 +133,7 @@ databaseChangeLog:
             baseColumnNames: product_class_code
             baseTableName: tpp_ref_product_register_type
             constraintName: fk_tpp_ref_product_register_type_on_tpp_ref_product_class
-            referencedColumnNames: value
+            referencedColumnNames: value_code
             referencedTableName: tpp_ref_product_class
         - createIndex:
             columns:
@@ -152,7 +152,7 @@ databaseChangeLog:
             baseColumnNames: account_type
             baseTableName: tpp_ref_product_register_type
             constraintName: fk_tpp_ref_product_register_type_on_tpp_ref_account_type
-            referencedColumnNames: value
+            referencedColumnNames: value_code
             referencedTableName: tpp_ref_account_type
         - createIndex:
             columns:
@@ -214,7 +214,7 @@ databaseChangeLog:
             baseColumnNames: type
             baseTableName: tpp_product_register
             constraintName: fk_tpp_product_register_on_tpp_ref_product_register_type
-            referencedColumnNames: value
+            referencedColumnNames: value_code
             referencedTableName: tpp_ref_product_register_type
         - createIndex:
             columns:

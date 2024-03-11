@@ -27,6 +27,6 @@ public class TppRefAccountTypeEntity {
     )
     private Long id;
 
-    @Column(name = "value", length = 100, nullable = false, unique = true)
+    @Column(name = "value_code", length = 100, nullable = false, unique = true)
     private String value;
 }

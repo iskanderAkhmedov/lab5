@@ -1,7 +1,5 @@
 server:
   port: ${SERVER_PORT:8081}
-  error:
-    include-stacktrace: always
 spring:
   application:
     name: Lab5

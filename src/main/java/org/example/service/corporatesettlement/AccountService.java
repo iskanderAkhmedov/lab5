@@ -33,17 +33,9 @@ public class AccountService {
 
     public CreateAccountResponseDto createAccount(CreateAccountRequestDto req) {
 
-        var registerTypeEntity = tppRefProductRegisterTypeRepository.findByValue(req.getRegistryTypeCode())
-                .orElseThrow(() -> (new EntityNotFoundException("Код Продукта " + req.getRegistryTypeCode()
-                        + " не найдено в Каталоге продуктов " + dbSchema + "." + getTableNameByEntityClass(TppRefProductRegisterTypeEntity.class)
-                        + " для данного типа Регистра")));
+        var registerTypeEntity = getRegisterTypeEntity(req.getRegistryTypeCode());
 
-        var existingRegistry = tppProductRegisterRepository.findByProductIdAndType(req.getInstanceId(), registerTypeEntity);
-
-        if (existingRegistry.isPresent()) {
-            throw new EntityAlreadyExistsException("Параметр registryTypeCode тип регистра "
-                    + req.getRegistryTypeCode() + " уже существует для ЭП с ИД " + req.getInstanceId() + ".");
-        }
+        checkExistsRegister(req.getInstanceId(), registerTypeEntity);
 
         var tppProductRegisterEntity = createAccount(req.getInstanceId(),
                 registerTypeEntity,
@@ -52,12 +44,7 @@ public class AccountService {
                 req.getMdmCode(),
                 req.getPriorityCode());
 
-        return CreateAccountResponseDto.builder()
-                .data(CreateAccountResponseDto.AccountData.builder()
-                        .accountId(tppProductRegisterEntity.getId().toString())
-                        .build())
-                .build();
-
+        return createResponseDto(tppProductRegisterEntity.getId());
     }
 
     public TppProductRegisterEntity createAccount(
@@ -76,6 +63,9 @@ public class AccountService {
         var accountEntity = accountRepository.findFirstByAccountPoolAndBussy(accountPoolEntity, false)
                 .orElseThrow(() -> (new EntityNotFoundException("Не найден свободный счет в пуле")));
 
+        accountEntity.setBussy(true);
+        accountEntity = accountRepository.save(accountEntity);
+
         return tppProductRegisterRepository.save(TppProductRegisterEntity.builder()
                 .productId(productId)
                 .type(type)
@@ -84,5 +74,29 @@ public class AccountService {
                 .currencyCode(currencyCode)
                 .state(CommonState.OPEN)
                 .build());
+    }
+
+    private CreateAccountResponseDto createResponseDto(Long productRegisterId) {
+        return CreateAccountResponseDto.builder()
+                .data(CreateAccountResponseDto.AccountData.builder()
+                        .accountId(productRegisterId.toString())
+                        .build())
+                .build();
+    }
+
+    private TppRefProductRegisterTypeEntity getRegisterTypeEntity(String registerTypeCode) {
+        return tppRefProductRegisterTypeRepository.findByValue(registerTypeCode)
+                .orElseThrow(() -> (new EntityNotFoundException("Код Продукта " + registerTypeCode
+                        + " не найдено в Каталоге продуктов " + dbSchema + "." + getTableNameByEntityClass(TppRefProductRegisterTypeEntity.class)
+                        + " для данного типа Регистра")));
+    }
+
+    private void checkExistsRegister(Long instanceId, TppRefProductRegisterTypeEntity registerTypeEntity) {
+        var existingRegistry = tppProductRegisterRepository.findByProductIdAndType(instanceId, registerTypeEntity);
+
+        if (existingRegistry.isPresent()) {
+            throw new EntityAlreadyExistsException("Параметр registryTypeCode тип регистра "
+                    + registerTypeEntity.getValue() + " уже существует для ЭП с ИД " + instanceId + ".");
+        }
     }
 }

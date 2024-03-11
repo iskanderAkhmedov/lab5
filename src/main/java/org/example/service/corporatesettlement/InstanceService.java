@@ -20,15 +20,16 @@ import org.example.storage.repository.corporatesettlement.TppRefProductRegisterT
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Timestamp;
 import java.util.List;
+
+import static org.example.utils.DateUtils.localDateToTimestamp;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class InstanceService {
 
-    private static final String ACCOUNT_CODE_CLIENT = "Клиентский";
+    public static final String ACCOUNT_CODE_CLIENT = "Клиентский";
     private static final String PRIORITY_CODE_00 = "00";
 
     private final TppProductRepository tppProductRepository;
@@ -88,20 +89,20 @@ public class InstanceService {
                         .generalAgreementId(agreement.getGeneralAgreementId())
                         .supplementaryAgreementId(agreement.getSupplementaryAgreementId())
                         .arrangementType(agreement.getArrangementType())
-                        .shedulerJobIid(agreement.getShedulerJobId())
+                        .shedulerJobId(agreement.getShedulerJobId())
                         .number(agreement.getNumber())
-                        .opening_date(Timestamp.valueOf(agreement.getOpeningDate().atStartOfDay()))
-                        .closingDate(Timestamp.valueOf(agreement.getClosingDate().atStartOfDay()))
-                        .cancelDate(Timestamp.valueOf(agreement.getCancelDate().atStartOfDay()))
+                        .openingDate(localDateToTimestamp(agreement.getOpeningDate()))
+                        .closingDate(localDateToTimestamp(agreement.getClosingDate()))
+                        .cancelDate(localDateToTimestamp(agreement.getCancelDate()))
                         .validityDuration(agreement.getValidityDuration())
                         .cancellationReason(agreement.getCancellationReason())
                         .status(agreement.getStatus())
-                        .interestCalculationDate(Timestamp.valueOf(agreement.getInterestCalculationDate().atStartOfDay()))
+                        .interestCalculationDate(localDateToTimestamp(agreement.getInterestCalculationDate()))
                         .interestRate(agreement.getInterestRate())
                         .coefficient(agreement.getCoefficient())
                         .coefficientAction(agreement.getCoefficientAction())
                         .minimumInterestRate(agreement.getMinimumInterestRate())
-                        .minimumInterestRateCoefficient(agreement.getMaximalInterestRateCoefficient())
+                        .minimumInterestRateCoefficient(agreement.getMinimumInterestRateCoefficient())
                         .minimumInterestRateCoefficientAction(agreement.getMinimumInterestRateCoefficientAction())
                         .maximalInterestRate(agreement.getMaximalInterestRate())
                         .maximalInterestRateCoefficient(agreement.getMaximalInterestRateCoefficient())
@@ -169,7 +170,7 @@ public class InstanceService {
                 .type(req.getProductType())
                 .number(req.getContractNumber())
                 .priority(req.getPriority())
-                .dateOfConclusion(Timestamp.valueOf(req.getContractDate().atStartOfDay()))
+                .dateOfConclusion(localDateToTimestamp(req.getContractDate()))
                 .penaltyRate(req.getInterestRatePenalty())
                 .nso(req.getMinimalBalance())
                 .thresholdAmount(req.getThresholdAmount())
